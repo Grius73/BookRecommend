@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wudi.mapper.HistoryMapper">
+  <resultMap id="BaseResultMap" type="com.wudi.model.HistoryKey">
+    <id column="userid" jdbcType="INTEGER" property="userid" />
+    <id column="bookid" jdbcType="INTEGER" property="bookid" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.wudi.model.HistoryKey">
+    delete from history
+    where userid = #{userid,jdbcType=INTEGER}
+      and bookid = #{bookid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wudi.model.HistoryKey">
+    insert into history (userid, bookid)
+    values (#{userid,jdbcType=INTEGER}, #{bookid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wudi.model.HistoryKey">
+    insert into history
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userid != null">
+        userid,
+      </if>
+      <if test="bookid != null">
+        bookid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userid != null">
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="bookid != null">
+        #{bookid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="queryBookidByUserid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select bookid from history where userid = #{userid,jdbcType=INTEGER}
+  </select>
+  <select id="getAll" resultMap="BaseResultMap">
+    select * from history
+  </select>
+  <select id="countByPrimaryKey" parameterType="com.wudi.model.HistoryKey" resultType="java.lang.Integer">
+     select count(*) from history
+      where userid = #{userid,jdbcType=INTEGER}
+      and bookid = #{bookid,jdbcType=INTEGER}
+  </select>
+
+</mapper>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wudi.mapper.RateMapper">
+  <resultMap id="BaseResultMap" type="com.wudi.model.Rate">
+    <id column="userid" jdbcType="INTEGER" property="userid" />
+    <id column="bookid" jdbcType="INTEGER" property="bookid" />
+    <result column="rating" jdbcType="INTEGER" property="rating" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    userid, bookid, rating
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="com.wudi.model.RateKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from rate
+    where userid = #{userid,jdbcType=INTEGER}
+      and bookid = #{bookid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.wudi.model.RateKey">
+    delete from rate
+    where userid = #{userid,jdbcType=INTEGER}
+      and bookid = #{bookid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wudi.model.Rate">
+    insert into rate (userid, bookid, rating
+      )
+    values (#{userid,jdbcType=INTEGER}, #{bookid,jdbcType=INTEGER}, #{rating,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wudi.model.Rate">
+    insert into rate
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userid != null">
+        userid,
+      </if>
+      <if test="bookid != null">
+        bookid,
+      </if>
+      <if test="rating != null">
+        rating,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userid != null">
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="bookid != null">
+        #{bookid,jdbcType=INTEGER},
+      </if>
+      <if test="rating != null">
+        #{rating,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wudi.model.Rate">
+    update rate
+    <set>
+      <if test="rating != null">
+        rating = #{rating,jdbcType=INTEGER},
+      </if>
+    </set>
+    where userid = #{userid,jdbcType=INTEGER}
+      and bookid = #{bookid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wudi.model.Rate">
+    update rate
+    set rating = #{rating,jdbcType=INTEGER}
+    where userid = #{userid,jdbcType=INTEGER}
+      and bookid = #{bookid,jdbcType=INTEGER}
+  </update>
+  <select id="selectByUserid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from rate
+    where userid = #{userid,jdbcType=INTEGER}
+  </select>
+  <select id="selectByBookid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from rate
+    and bookid = #{bookid,jdbcType=INTEGER}
+  </select>
+  <select id="getAll" resultMap="BaseResultMap">
+   select * from rate
+  </select>
+  <select id="getRelateUserid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select distinct userid from rate where bookid in(select bookid from rate where userid=#{userid,jdbcType=INTEGER})
+  </select>
+  <select id="rateSizeByUserid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select count(userid) from rate where userid=#{userid,jdbcType=INTEGER}
+  </select>
+  <select id="sameBookByUserid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select count(bookid) from rate where userid=#{userid1,jdbcType=INTEGER} and bookid in(select bookid from rate where userid=#{userid2,jdbcType=INTEGER})
+  </select>
+  <select id="getRelatedBookid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select
+    bookid
+    from rate where userid IN
+    <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+      #{id}   <!--这里要和 item 值保持一致-->
+    </foreach>
+  </select>
+  <select id="countByPrimaryKey" parameterType="com.wudi.model.RateKey" resultType="java.lang.Integer">
+     select count(*) from rate
+      where userid = #{userid,jdbcType=INTEGER}
+      and bookid = #{bookid,jdbcType=INTEGER}
+  </select>
+
+  <select id="avgScore" parameterType="java.lang.Integer" resultType="java.lang.Float">
+     select avg(rating) from rate where bookid=#{bookid,jdbcType=INTEGER}
+  </select>
+
+  <select id="rateNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+      select count(userid) from rate where bookid=#{bookid,jdbcType=INTEGER}
+  </select>
+
+</mapper>

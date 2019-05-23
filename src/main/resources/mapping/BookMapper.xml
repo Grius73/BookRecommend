@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wudi.mapper.BookMapper">
+  <resultMap id="BaseResultMap" type="com.wudi.model.Book">
+    <id column="bookid" jdbcType="INTEGER" property="bookid" />
+    <result column="isbn" jdbcType="VARCHAR" property="isbn" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="author" jdbcType="VARCHAR" property="author" />
+    <result column="pyear" jdbcType="INTEGER" property="pyear" />
+    <result column="publisher" jdbcType="VARCHAR" property="publisher" />
+    <result column="imageS" jdbcType="VARCHAR" property="images" />
+    <result column="imageM" jdbcType="VARCHAR" property="imagem" />
+    <result column="imageL" jdbcType="VARCHAR" property="imagel" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    bookid, isbn, title, author, pyear, publisher, imageS, imageM, imageL
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from book
+    where bookid = #{bookid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from book
+    where bookid = #{bookid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wudi.model.Book">
+    insert into book (bookid, isbn, title, 
+      author, pyear, publisher, 
+      imageS, imageM, imageL
+      )
+    values (#{bookid,jdbcType=INTEGER}, #{isbn,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{author,jdbcType=VARCHAR}, #{pyear,jdbcType=INTEGER}, #{publisher,jdbcType=VARCHAR}, 
+      #{images,jdbcType=VARCHAR}, #{imagem,jdbcType=VARCHAR}, #{imagel,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wudi.model.Book">
+    insert into book
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="bookid != null">
+        bookid,
+      </if>
+      <if test="isbn != null">
+        isbn,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="author != null">
+        author,
+      </if>
+      <if test="pyear != null">
+        pyear,
+      </if>
+      <if test="publisher != null">
+        publisher,
+      </if>
+      <if test="images != null">
+        imageS,
+      </if>
+      <if test="imagem != null">
+        imageM,
+      </if>
+      <if test="imagel != null">
+        imageL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="bookid != null">
+        #{bookid,jdbcType=INTEGER},
+      </if>
+      <if test="isbn != null">
+        #{isbn,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null">
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="pyear != null">
+        #{pyear,jdbcType=INTEGER},
+      </if>
+      <if test="publisher != null">
+        #{publisher,jdbcType=VARCHAR},
+      </if>
+      <if test="images != null">
+        #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="imagem != null">
+        #{imagem,jdbcType=VARCHAR},
+      </if>
+      <if test="imagel != null">
+        #{imagel,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wudi.model.Book">
+    update book
+    <set>
+      <if test="isbn != null">
+        isbn = #{isbn,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null">
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="pyear != null">
+        pyear = #{pyear,jdbcType=INTEGER},
+      </if>
+      <if test="publisher != null">
+        publisher = #{publisher,jdbcType=VARCHAR},
+      </if>
+      <if test="images != null">
+        imageS = #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="imagem != null">
+        imageM = #{imagem,jdbcType=VARCHAR},
+      </if>
+      <if test="imagel != null">
+        imageL = #{imagel,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where bookid = #{bookid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wudi.model.Book">
+    update book
+    set isbn = #{isbn,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      pyear = #{pyear,jdbcType=INTEGER},
+      publisher = #{publisher,jdbcType=VARCHAR},
+      imageS = #{images,jdbcType=VARCHAR},
+      imageM = #{imagem,jdbcType=VARCHAR},
+      imageL = #{imagel,jdbcType=VARCHAR}
+    where bookid = #{bookid,jdbcType=INTEGER}
+  </update>
+  <select id="selectByList" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+     select
+    <include refid="Base_Column_List" />
+    from book where bookid IN
+    <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+      #{id}   <!--这里要和 item 值保持一致-->
+    </foreach>
+  </select>
+  <select id="selectByAuthor" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from book
+    where author = #{author,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByKeyWord" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from book
+    where title like "%"#{keyword,jdbcType=VARCHAR}"%" or author like "%"#{keyword,jdbcType=VARCHAR}"%" or publisher like "%"#{keyword,jdbcType=VARCHAR}"%"
+  </select>
+  <select id="getAll" resultMap="BaseResultMap">
+    select * from book
+  </select>
+  <select id="selectByLongList" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from book where bookid IN
+    <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+      #{id}   <!--这里要和 item 值保持一致-->
+    </foreach>
+  </select>
+  <select id="recommendByAuthor" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from book
+    where author = #{author,jdbcType=VARCHAR} limit 12
+  </select>
+</mapper>

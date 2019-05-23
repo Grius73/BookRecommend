@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}" rel="stylesheet">
+    <title>图书详情页</title>
+</head>
+
+<body>
+<!--头部开始(导入头部headnav)-->
+<div th:replace="commons/headnav::topnav"></div>
+<!--头部结束-->
+<!--<div class="card" style="float:left">-->
+    <!--<img src="" th:src="${bookdetail.imagel}" alt="图片丢失">-->
+    <!--<div class="caption">-->
+        <!--<h3 th:text="${bookdetail.title}"></h3>-->
+        <!--<p th:text="${bookdetail.isbn}" ></p>-->
+        <!--<p th:text="${bookdetail.author}"></p>-->
+        <!--<p th:text="${bookdetail.pyear}"></p>-->
+        <!--<p th:text="${bookdetail.publisher}"></p>-->
+        <!--<p><a href="#" th:href="@{/history/}+${bookdetail.bookid}" class="btn btn-primary" role="button">收藏</a> </p>-->
+        <!--<p> <form th:action="@{/rate/}+${bookdetail.bookid}" method="get">-->
+            <!--<input id="input-id" type="number" class="rating" min=1 max=10 step=1 data-size="lg" name="rate" />-->
+            <!--<button type="submit" class="btn btn-sm">评分</button>-->
+          <!--</form></p>-->
+    <!--</div>-->
+<!--</div>-->
+<!--<div style="width:50% ;float:right">-->
+    <!--<div class="title text-center">-->
+        <!--<h1><strong style="color:whitesmoke">与之类似的书籍有：</strong></h1>-->
+    <!--</div>-->
+    <!--<div class="row" style="padding-top:10px;padding-left: 10px;background-color: #9d9d9d">-->
+            <!--<div class="card col-sm-6 col-md-2" th:each="book:${cfbooks}">-->
+                <!--<img src="" th:src="${book.imagem}" alt="图书丢失">-->
+                <!--<div class="card-body">-->
+                    <!--<p th:text="${book.title}"></p>-->
+                <!--</div>-->
+            <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+
+<!--图书明细-->
+<section id="detail" class="text-center">
+    <h1 class="py-3" th:text="${bookdetail.title}"></h1>
+    <h3 calss="py-3" th:if="${rateNum!=null}" th:text="'本书已经有:'+${rateNum}+'人对其评价 '+' 平均分为：'+${avgScore}+'分' "></h3>
+    <div class="caption py-3 mx-5">
+        <div class="row">
+            <div class="col-md-6">
+                <img th:src="${bookdetail.imagel}">
+            </div>
+            <div class="col-md-6">
+                <h1 class="py-3" th:text="'ISBN : '+${bookdetail.isbn}"></h1>
+                <h2 class="py-3" th:text=" '作者 ：'+${bookdetail.author} "></h2>
+                <h2 class="py-3" th:text=" '出版日期 ：'+${bookdetail.pyear} "></h2>
+                <h2 class="py-3" th:text=" '出版社 ：'+${bookdetail.publisher} "></h2>
+                <a href="#" th:href="@{/history/}+${bookdetail.bookid}"
+                   class="btn btn-primary px-2 py-2 my-3" role="button"
+                   th:if="${session.loginUser!=null&&session.isHistory==0}" >有兴趣就收藏一下</a>
+                <h3 th:if="${session.loginUser!=null&&session.isHistory!=0}">已经收藏</h3>
+                <form th:action="@{/main/}+${bookdetail.bookid}" method="post" th:if="${session.loginUser!=null&&session.isHistory!=0}">
+                    <input type="hidden" name="_method" value="delete"/>
+                    <button type="submit" class="btn btn-sm btn-danger p-3">取消收藏</button>
+                </form>
+                 <form th:action="@{/rate/}+${bookdetail.bookid}" method="get" th:if="${session.loginUser!=null&&isRate==null}">
+                    <input id="input-id" type="number" class="rating my-3" min=1 max=10 step=1 data-size="lg" name="rate"/>
+                     <button type="submit" class="btn btn-sm my-3" >评分</button>
+                  </form>
+                <h3 th:if="${isRate!=null} " class="py-3" th:text="'您的评分为：'+${isRate.rating}+'分'"></h3>
+                <form th:action="@{/main/}+${bookdetail.bookid}" method="post" th:if="${session.loginUser!=null&&isRate!=null}">
+                    <input type="hidden" name="_method" value="put"/>
+                    <button type="submit" class="btn btn-sm btn-danger p-3">重新评分</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!--图书明细-->
+
+<!--根据项目推荐模块-->
+<section id="book_cf" class="bg-light">
+    <h1 class="text-center py-3">类似图书推荐</h1>
+    <div class="container px-3">
+        <div class="row">
+            <div class="col-md-2 pb-3" th:each="book:${cfbooks}">
+                <div class="card">
+                    <img th:src="${book.imagem}" alt="图片丢失">
+                    <div class="card-body">
+                        <a href="#" th:href="@{/main/}+${book.bookid}" class="card-link">
+                            <p th:text="${book.title}"></p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--根据项目推荐模块-->
+
+<!--尾开始-->
+<section id="wd_footer">
+    <div th:replace="commons/headnav::footnav"></div>
+</section>
+<!--尾结束-->
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script type="text/javascript" src="asserts/js/jquery-3.2.1.slim.min.js" th:src="@{/webjars/jquery/3.0.0/jquery.js}"></script>
+<script type="text/javascript" src="asserts/js/popper.min.js" th:src="@{/webjars/popper.js/1.14.3/dist/popper.js}"></script>
+<script type="text/javascript" src="asserts/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
+</body>
+</html>

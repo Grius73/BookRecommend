@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>导航</title>
+</head>
+<body>
+
+<!--导航-->
+<header id="wd_header">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" th:fragment="topnav">
+        <a class="navbar-brand" style="-webkit-text-fill-color:whitesmoke" th:text="'欢迎您的访问！ '+${session.loginUser}" th:if="${session.loginUser}!=null"></a>
+        <a class="navbar-brand" th:if="${session.loginUser}==null" th:text="游客请先登录 " th:href="@{/login}"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="wd_nav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#" th:href="@{/main}">首页 <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#hot" >热门书籍</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#ranking" >点击榜</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#wd_cf" th:if="${session.loginUser}!=null">推荐书籍</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/rates}" th:if="${session.loginUser}!=null">评分管理</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/historys}" th:if="${session.loginUser}!=null">收藏夹</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0" th:action="@{/search}" method="get">
+                <input class="form-control mr-sm-2" type="search" placeholder="搜索关键词" aria-label="Search" name="keyword">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">查找</button>
+            </form>
+            <a href="/login" th:if="${session.loginUser!=null}" class="btn btn-danger mx-2">登出</a>
+            <a href="/register" th:if="${session.loginUser==null}" class="btn btn-secondary mx-2" >还没账号？赶紧注册一个！</a>
+        </div>
+    </nav>
+</header>
+<!--导航-->
+
+<footer id="wd_footer" class="bg-dark text-muted"  th:fragment="footnav">
+    <div class="container">
+        <p class="py-5" th:text="感谢您的访问"></pcla>
+    </div>
+</footer>
+
+<section class="bg-light text-center py-4">
+    <a href="//i.youku.com/komavideo" target="_blank" class="btn btn-primary btn-lg">优酷频道</a>
+    <a href="//www.youtube.com/channel/UC5sgzai6AyPWLM7-hblV9oA" target="_blank" class="btn btn-danger btn-lg">Youtube频道</a>
+</section>
+...
+<footer class="text-center text-muted py-4">
+    Copyright @Koma komavideo.com
+</footer>
+</body>
+</html>
