@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wudi.mapper.CommentMapper">
+  <resultMap id="BaseResultMap" type="com.wudi.model.Comment">
+    <id column="bookid" jdbcType="INTEGER" property="bookid" />
+    <result column="userid" jdbcType="INTEGER" property="userid" />
+    <result column="datetime" jdbcType="TIMESTAMP" property="datetime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.wudi.model.Comment">
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    bookid, userid, datetime
+  </sql>
+  <sql id="Blob_Column_List">
+    content
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from bookcomment
+    where bookid = #{bookid,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUserid" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from bookcomment
+    where userid = #{userid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bookcomment
+    where bookid = #{bookid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wudi.model.Comment">
+    insert into bookcomment (bookid, userid, datetime, 
+      content)
+    values (#{bookid,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{datetime,jdbcType=TIMESTAMP}, 
+      #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wudi.model.Comment">
+    insert into bookcomment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="bookid != null">
+        bookid,
+      </if>
+      <if test="userid != null">
+        userid,
+      </if>
+      <if test="datetime != null">
+        datetime,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="bookid != null">
+        #{bookid,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="datetime != null">
+        #{datetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wudi.model.Comment">
+    update bookcomment
+    <set>
+      <if test="userid != null">
+        userid = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="datetime != null">
+        datetime = #{datetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where bookid = #{bookid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wudi.model.Comment">
+    update bookcomment
+    set userid = #{userid,jdbcType=INTEGER},
+      datetime = #{datetime,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where bookid = #{bookid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wudi.model.Comment">
+    update bookcomment
+    set userid = #{userid,jdbcType=INTEGER},
+      datetime = #{datetime,jdbcType=TIMESTAMP}
+    where bookid = #{bookid,jdbcType=INTEGER}
+  </update>
+  <delete id="delectByRecord" parameterType="com.wudi.model.Comment">
+    delete from bookcomment
+    where bookid=#{bookid,jdbcType=INTEGER} and
+        userid = #{userid,jdbcType=INTEGER}
+  </delete>
+  <!--<delete id="deleteBytwId" >-->
+    <!--delete from bookcomment-->
+    <!--where bookid=#{0} and-->
+        <!--userid = #{1}-->
+  <!--</delete>-->
+</mapper>
