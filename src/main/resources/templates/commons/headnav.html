@@ -34,6 +34,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#" th:href="@{/historys}" th:if="${session.loginUser}!=null">收藏夹</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/comments}" th:if="${session.loginUser}!=null">我的评论</a>
+                </li>
             </ul>
             <form class="form-inline my-2 my-lg-0" th:action="@{/search}" method="get">
                 <input class="form-control mr-sm-2" type="search" placeholder="搜索关键词" aria-label="Search" name="keyword">

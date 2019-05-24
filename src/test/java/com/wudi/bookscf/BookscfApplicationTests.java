@@ -1,9 +1,7 @@
 package com.wudi.bookscf;
 
-import com.wudi.mapper.AccountMapper;
-import com.wudi.mapper.ClickMapper;
-import com.wudi.mapper.HistoryMapper;
-import com.wudi.mapper.RateMapper;
+import com.wudi.mapper.*;
+import com.wudi.model.Comment;
 import com.wudi.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
 
 
 @RunWith(SpringRunner.class)
@@ -35,6 +36,10 @@ public class BookscfApplicationTests {
     ClickService clickService;
     @Autowired
     RateService rateService;
+    @Autowired
+    CommentService commentService;
+    @Autowired
+    CommentMapper commentMapper;
 
     private String test="sadasdasda";
     private String test1="lisi";
@@ -128,8 +133,17 @@ public class BookscfApplicationTests {
     public void testClicks(){
 //        Click click=new Click();
 //        click.setBookid(38742);
-//        click.setSize(clickMapper.selectByPrimaryKey(38742).getSize());
-        LocalDate today=LocalDate.now();
-        System.out.println(today);
+////        click.setSize(clickMapper.selectByPrimaryKey(38742).getSize());
+//        LocalDate today=LocalDate.now();
+//        System.out.println(today);
+//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+//        System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
+//        String comment="这本书很好看，针砭时弊，入木三分！";
+//        commentService.insertComment(comment,38742,882);
+        List<Comment> commentList=commentMapper.selectByUserid(882);
+        for(int i=0;i<commentList.size();i++){
+            System.out.println(commentList.get(i));
+        }
+
     }
 }

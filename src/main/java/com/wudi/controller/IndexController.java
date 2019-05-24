@@ -5,10 +5,7 @@ import com.wudi.mapper.BookMapper;
 import com.wudi.mapper.ClickMapper;
 import com.wudi.mapper.RateMapper;
 import com.wudi.model.*;
-import com.wudi.service.BookService;
-import com.wudi.service.ClickService;
-import com.wudi.service.HistoryService;
-import com.wudi.service.RateService;
+import com.wudi.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,6 +34,8 @@ public class IndexController {
     RateService rateService;
     @Autowired
     RateMapper rateMapper;
+    @Autowired
+    CommentService commentService;
 
     @GetMapping("/main")
     public String list(Model model, HttpSession session) {
@@ -51,6 +50,15 @@ public class IndexController {
         }
 
         return "main";
+    }
+    @PostMapping("/main/{bookid}")
+    public String addComment(@PathVariable("bookid") Integer bookid,
+                             @RequestParam("content") String content,
+        HttpSession session){
+        System.out.println(content);
+        Integer userid =(Integer) session.getAttribute("loginUserid");
+        commentService.insertComment(content,bookid,userid);
+        return "redirect:/main/{bookid}";
     }
 
     @GetMapping("/main/{bookid}")//前往图书详情页
@@ -69,6 +77,8 @@ public class IndexController {
         Integer userid = (Integer) session.getAttribute("loginUserid");//导入用户id
         List<Book> books = bookMapper.recommendByAuthor(book.getAuthor());
         model.addAttribute("cfbooks", books);//按作者推荐书籍
+        List<Comment> comments=commentService.returnCommentBybkid(bookid);
+        model.addAttribute("comments",comments);
 
         if(userid != null){
             int isHistory = historyService.countRecords(bookid,userid);
